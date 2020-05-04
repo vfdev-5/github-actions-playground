@@ -14,8 +14,5 @@ jobs:
 
     - name: Install MKL
       run: |
-
-        ## Install openblas and mkl
-#        sudo apt-get install -y libopenblas-dev libomp5
         pip install --user mkl
         ls /usr/local/lib/
