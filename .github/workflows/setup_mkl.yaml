@@ -21,4 +21,6 @@ jobs:
         echo "ls /opt/hostedtoolcache/Python/3.6.10/x64" && ls /opt/hostedtoolcache/Python/3.6.10/x64/
         echo "ls /opt/hostedtoolcache/Python/3.6.10/x64/lib" && ls /opt/hostedtoolcache/Python/3.6.10/x64/lib
         
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/hostedtoolcache/Python/3.6.10/x64/lib
+        
         locate libmkl_intel_lp64.so
