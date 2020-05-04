@@ -16,8 +16,9 @@ jobs:
       run: |
         pip install mkl
         echo "ls /usr/local/lib/" && ls /usr/local/lib/
-        echo "ls /usr/local/lib/python3.6" && ls /usr/local/lib/python3.6        
+        echo "ls /usr/local/lib/python3.6/dist-packages" && ls /usr/local/lib/python3.6/dist-packages
         echo "ls /opt/hostedtoolcache/Python/3.6.10/x64/bin" && ls /opt/hostedtoolcache/Python/3.6.10/x64/bin
         echo "ls /opt/hostedtoolcache/Python/3.6.10/x64" && ls /opt/hostedtoolcache/Python/3.6.10/x64/
+        echo "ls /opt/hostedtoolcache/Python/3.6.10/x64/lib" && ls /opt/hostedtoolcache/Python/3.6.10/x64/lib
         
         locate libmkl_intel_lp64.so
