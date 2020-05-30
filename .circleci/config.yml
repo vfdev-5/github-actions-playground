@@ -1,11 +1,16 @@
 version: 2.1
 
+orbs:
+  codecov: codecov/codecov@1.0.5
+
 # -------------------------------------------------------------------------------------
 # Jobs to run
 # -------------------------------------------------------------------------------------
 jobs:
 
   test_three:
+    docker:
+      - image: circleci/python:3.7
     steps:
       - checkout
       - run:
@@ -13,7 +18,9 @@ jobs:
           command: |
             pip install pytest codecov pytest-cov
             pytest --cov src --cov-report term-missing tests/test_three.py
-            codecov -F three
+      - codecov/upload:
+            file: {{ coverage_report_filepath }}
+            flags: three
 
 # -------------------------------------------------------------------------------------
 # Workflows
