@@ -13,6 +13,5 @@ install:
 
 script:
   - pytest --cov src --cov-report term-missing tests/test_one.py
-
-after_success:
   - codecov -cF one
+
