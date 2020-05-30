@@ -15,10 +15,13 @@ jobs:
     - name: Run test two
       run: |
         pip install pytest codecov pytest-cov
-        pytest --cov src --cov-report term-missing tests/test_two.py
+        pytest --cov src --cov-report=xml tests/test_two.py
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
-        flags: two
+        file: ./coverage.xml
+        flags: one
+        env_vars: OS,PYTHON
+        name: codecov-umbrella
         fail_ci_if_error: true
