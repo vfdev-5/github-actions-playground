@@ -1,8 +1,5 @@
 version: 2.1
 
-orbs:
-  codecov: codecov/codecov@1.0.5
-
 # -------------------------------------------------------------------------------------
 # Jobs to run
 # -------------------------------------------------------------------------------------
@@ -18,9 +15,10 @@ jobs:
           command: |
             pip install pytest codecov pytest-cov
             pytest --cov src --cov-report term-missing tests/test_three.py
-      - codecov/upload:
-            file: {{ coverage_report_filepath }}
-            flags: three
+      - run:
+          name: Codecov upload
+          command: |
+            codecov -F three || echo 'Codecov upload failed'
 
 # -------------------------------------------------------------------------------------
 # Workflows

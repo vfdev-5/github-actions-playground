@@ -13,5 +13,5 @@ install:
 
 script:
   - pytest --cov src --cov-report term-missing tests/test_one.py
-  - codecov -F one
+  - codecov -F one || echo 'Codecov upload failed'
 
