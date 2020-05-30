@@ -1,0 +1,20 @@
+on: [pull_request]
+
+jobs:
+  mkl-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.7'
+        architecture: 'x64'
+
+    - name: Run test two
+      run: |
+        pip install pytest codecov pytest-cov
+        python setup.py install
+        pytest --cov src --cov-report term-missing tests/test_two.py
+        codecov -cF two
