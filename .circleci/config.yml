@@ -12,7 +12,6 @@ jobs:
           name: Run test three
           command: |
             pip install pytest codecov pytest-cov
-            python setup.py install
             pytest --cov src --cov-report term-missing tests/test_three.py
             codecov -cF three
 

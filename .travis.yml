@@ -10,7 +10,6 @@ python:
 
 install:
   - pip install pytest codecov pytest-cov
-  - python setup.py install
 
 script:
   - pytest --cov src --cov-report term-missing tests/test_one.py
