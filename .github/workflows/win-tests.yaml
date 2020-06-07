@@ -18,7 +18,7 @@ jobs:
         python-version: 3.7
 
     - name: Check conda and install dependencies
-      shell: bash
+      shell: bash -l {0}
       run: |
         conda --version
         conda install pytorch torchvision cpuonly -c pytorch
