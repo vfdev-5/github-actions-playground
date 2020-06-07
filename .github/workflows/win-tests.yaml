@@ -1,0 +1,24 @@
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      max-parallel: 10
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Miniconda
+      uses: goanpeca/setup-miniconda@v1
+      with:
+        miniconda-version: "latest"
+        python-version: 3.7
+
+    - name: Check conda and install dependencies
+      shell: bash
+      run: |
+        conda --version
+        conda install pytorch torchvision cpuonly -c pytorch
