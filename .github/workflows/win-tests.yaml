@@ -8,6 +8,10 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
+        include:
+          - os: macos-latest
+            env:
+              MYVAR: "got_it"
 
     steps:
     - uses: actions/checkout@v2
@@ -22,3 +26,4 @@ jobs:
       run: |
         conda --version
         conda install pytorch torchvision cpuonly -c pytorch
+        echo "${MYVAR}"
