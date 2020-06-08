@@ -24,4 +24,4 @@ jobs:
       shell: bash -l {0}
       run: |
         conda --version
-        echo "MYVAR=${{ my-var }}"
+        echo "MYVAR=${{ matrix.my-var }}"
