@@ -25,5 +25,4 @@ jobs:
       shell: bash -l {0}
       run: |
         conda --version
-        conda install pytorch torchvision cpuonly -c pytorch
-        echo "${MYVAR}"
+        echo "MYVAR=${MYVAR}"
