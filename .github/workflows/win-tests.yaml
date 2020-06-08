@@ -10,8 +10,7 @@ jobs:
         os: [ubuntu-latest, windows-latest]
         include:
           - os: macos-latest
-            env:
-              MYVAR: "got_it"
+            my-var: "got_it"
 
     steps:
     - uses: actions/checkout@v2
@@ -25,4 +24,4 @@ jobs:
       shell: bash -l {0}
       run: |
         conda --version
-        echo "MYVAR=${MYVAR}"
+        echo "MYVAR=${{ my-var }}"
