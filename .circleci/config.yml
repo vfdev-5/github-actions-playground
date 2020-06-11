@@ -13,12 +13,12 @@ jobs:
       - run:
           name: Run test three
           command: |
-            pip install pytest codecov pytest-cov
+            pip install pytest pytest-cov
             pytest --cov src --cov-report term-missing tests/test_three.py
       - run:
           name: Codecov upload
           command: |
-            codecov -F three || echo 'Codecov upload failed'
+            bash <(curl -s https://codecov.io/bash) -Z -F three
 
 # -------------------------------------------------------------------------------------
 # Workflows
