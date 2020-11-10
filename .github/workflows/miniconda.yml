@@ -1,0 +1,26 @@
+name: Check miniconda and Env
+
+on: [push, pull_request]
+
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Miniconda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          miniconda-version: "latest"
+          python-version: 3.7
+
+      - name: Test Env
+        shell: bash -l {0}
+        env:
+          A_TOKEN: "my-token"
+        run: |
+          echo "a-token is ${A_TOKEN}"
+          if [ -z $A_TOKEN ]; then
+            echo "Can not find A_TOKEN env variable"
+          fi
