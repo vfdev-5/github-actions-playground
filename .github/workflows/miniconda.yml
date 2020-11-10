@@ -19,8 +19,14 @@ jobs:
         shell: bash -l {0}
         env:
           A_TOKEN: "my-token"
+          B_TOKEN: ${{ secrets.B_TOKEN }}
         run: |
           echo "a-token is ${A_TOKEN}"
           if [ -z $A_TOKEN ]; then
             echo "Can not find A_TOKEN env variable"
+          fi
+
+          echo "b-token is ${B_TOKEN}"
+          if [ -z $B_TOKEN ]; then
+            echo "Can not find B_TOKEN env variable"
           fi
