@@ -68,5 +68,7 @@ jobs:
           mypy --version
           echo "--- pytest version ---"
           pytest --version
+          echo "--- tqdm version ---"
+          pip list | grep tqdm
 
 
