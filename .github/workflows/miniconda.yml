@@ -28,30 +28,33 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup Miniconda
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          miniconda-version: "latest"
-          python-version: 3.7
-          use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
-
       - name: Setup output vars
         id: vars
         shell: bash -l {0}        
         run: |
           echo "::set-output name=date::$(/bin/date "+%H")"
-          echo "::set-output name=pip-cache-dir::$(pip cache dir)"
-          echo "pip packages versions 123" > requirements-dev.txt
+          echo "pip packages versions 1234" > requirements-dev.txt
 
       - uses: actions/cache@v2
         id: cache
         with:
           path: |
-            ${{ env.CONDA_PKGS_DIR }}
-            ${{ steps.vars.outputs.pip-cache-dir }}
+            # ${{ env.CONDA_PKGS_DIR }}
+            ~/conda_pkgs_dir
+            # ${{ steps.vars.outputs.pip-cache-dir }}
+            ~/.cache/pip
           key: ${{ steps.vars.outputs.date }}-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.pytorch-channel }}-${{ hashFiles('requirements-dev.txt') }}
 
+      - name: Setup Miniconda
+        uses: conda-incubator/setup-miniconda@v2
+        if: steps.cache.outputs.cache-hit != 'true'
+        with:
+          miniconda-version: "latest"
+          python-version: 3.7
+          use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
+
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         shell: bash -l {0}
         run: |
           conda install pytorch torchvision cpuonly -c ${{ matrix.pytorch-channel }}
