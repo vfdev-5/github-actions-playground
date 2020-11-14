@@ -30,7 +30,6 @@ jobs:
 
       - name: Setup output vars
         id: vars
-        shell: bash -l {0}        
         run: |
           echo "::set-output name=date::$(/bin/date "+%H")"
           echo "pip packages versions 1234" > requirements-dev.txt
