@@ -35,26 +35,21 @@ jobs:
           python-version: 3.7
           use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
 
-      - name: Get hours & minutes number
-        id: get-date
-        run: echo "::set-output name=date::$(/bin/date "+%H-%M")"
-        shell: bash -l {0}
+      - name: Setup output vars
+        id: vars
+        shell: bash -l {0}        
+        run: |
+          echo "::set-output name=date::$(/bin/date "+%H")"
+          echo "::set-output name=pip-cache-dir::$(pip cache dir)"
+          echo "pip packages versions 123" > requirements-dev.txt
 
-      - name: Get pip cache dir
-        id: pip-cache
-        run: echo "::set-output name=dir::$(pip cache dir)"
-        shell: bash -l {0}
-      
       - uses: actions/cache@v2
         id: cache
         with:
           path: |
             ${{ env.CONDA_PKGS_DIR }}
-            ${{ env.CONDA }}/envs/test/lib/python${{ matrix.python-version }}/site-packages/*
-            ${{ steps.pip-cache.outputs.dir }}
-          key: ${{ steps.get-date.outputs.date }}-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.pytorch-channel }}-${{ hashFiles('requirements-dev.txt') }}
-          restore-keys: |
-            ${{ steps.get-date.outputs.date }}-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.pytorch-channel }}-
+            ${{ steps.vars.outputs.pip-cache-dir }}
+          key: ${{ steps.vars.outputs.date }}-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.pytorch-channel }}-${{ hashFiles('requirements-dev.txt') }}
 
       - name: Install dependencies
         shell: bash -l {0}
