@@ -30,6 +30,7 @@ jobs:
 
       - name: Setup output vars
         id: vars
+        shell: bash -l {0}
         run: |
           echo "::set-output name=date::$(/bin/date "+%H")"
           echo "pip packages versions 1234" > requirements-dev.txt
@@ -38,9 +39,7 @@ jobs:
         id: cache
         with:
           path: |
-            # ${{ env.CONDA_PKGS_DIR }}
             ~/conda_pkgs_dir
-            # ${{ steps.vars.outputs.pip-cache-dir }}
             ~/.cache/pip
           key: ${{ steps.vars.outputs.date }}-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.pytorch-channel }}-${{ hashFiles('requirements-dev.txt') }}
 
