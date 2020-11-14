@@ -60,8 +60,10 @@ jobs:
       - name: Check deps
         shell: bash -l {0}
         run: |
+          which conda
+          which pip
           echo "--- conda list | grep torch ---"
-          conda list | grep torch
+          conda list | grep torch          
           echo "--- pip list ---"
           pip list
           echo "--- mypy version ---"
