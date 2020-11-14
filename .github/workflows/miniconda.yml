@@ -45,7 +45,6 @@ jobs:
 
       - name: Setup Miniconda
         uses: conda-incubator/setup-miniconda@v2
-        if: steps.cache.outputs.cache-hit != 'true'
         with:
           miniconda-version: "latest"
           python-version: 3.7
