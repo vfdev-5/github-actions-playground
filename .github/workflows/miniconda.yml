@@ -1,11 +1,30 @@
-name: Check miniconda and Env
+name: setup miniconda, cache and install deps + check cache
 
 on: [push, pull_request]
 
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      max-parallel: 10
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, ]
+        python-version: [3.7, ]
+        pytorch-channel: [pytorch, ]
+        include:
+          # includes a single build on windows
+          - os: windows-latest
+            pytorch-channel: pytorch
+            python-version: 3.7
+            skip-distrib-tests: 1
+          # includes a single build on macosx
+          - os: macos-latest
+            pytorch-channel: pytorch
+            python-version: 3.7
+            skip-distrib-tests: 1
+
     steps:
       - uses: actions/checkout@v2
 
@@ -14,19 +33,45 @@ jobs:
         with:
           miniconda-version: "latest"
           python-version: 3.7
+          use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
 
-      - name: Test Env
+      - name: Get hours & minutes number
+        id: get-date
+        run: echo "::set-output name=date::$(/bin/date "+%H-%M")"
         shell: bash -l {0}
-        env:
-          A_TOKEN: "my-token"
-          B_TOKEN: ${{ secrets.B_TOKEN }}
-        run: |
-          echo "a-token is ${A_TOKEN}"
-          if [ -z $A_TOKEN ]; then
-            echo "Can not find A_TOKEN env variable"
-          fi
 
-          echo "b-token is ${B_TOKEN}"
-          if [ -z $B_TOKEN ]; then
-            echo "Can not find B_TOKEN env variable"
-          fi
+      - name: Get pip cache dir
+        id: pip-cache
+        run: echo "::set-output name=dir::$(pip cache dir)"
+        shell: bash -l {0}
+      
+      - uses: actions/cache@v2
+        id: cache
+        with:
+          path: |
+            ${{ env.CONDA_PKGS_DIR }}
+            ${{ env.CONDA }}/envs/test/lib/python${{ matrix.python-version }}/site-packages/*
+            ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ steps.get-date.outputs.date }}-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.pytorch-channel }}-${{ hashFiles('requirements-dev.txt') }}
+          restore-keys: |
+            ${{ steps.get-date.outputs.date }}-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.pytorch-channel }}-
+
+      - name: Install dependencies
+        shell: bash -l {0}
+        run: |
+          conda install pytorch torchvision cpuonly -c ${{ matrix.pytorch-channel }}
+          pip install tqdm pytest mypy
+
+      - name: Check deps
+        shell: bash -l {0}
+        run: |
+          echo "--- conda list | grep torch ---"
+          conda list | grep torch
+          echo "--- pip list ---"
+          pip list
+          echo "--- mypy version ---"
+          mypy --version
+          echo "--- pytest version ---"
+          pytest --version
+
+
