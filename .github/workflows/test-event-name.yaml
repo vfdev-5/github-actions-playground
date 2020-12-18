@@ -1,0 +1,26 @@
+name: Build And Publish Docker Images
+
+on:
+  push:
+    branches:
+      - master
+  release:
+    types: [published]
+  pull_request:
+
+
+jobs:
+  build-publish:
+    name: Build and Push Docker images to Docker Hub
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Trigger Circle-CI pipeline
+        run: |
+          event_name=${{ github.event_name }}
+          if [ $event_name == 'pull_request' ]; then should_publish_docker_images=false; else should_publish_docker_images=true; fi
+          echo "should_publish_docker_images=$should_publish_docker_images"
+          branch=${{ github.head_ref }}
+          echo "branch=$branch"
+          echo "sh .github/workflows/trigger_circle_ci.sh $should_publish_docker_images $branch"
