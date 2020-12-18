@@ -18,9 +18,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: Trigger Circle-CI pipeline
         run: |
-          event_name=${{ github.event_name }}
-          if [ $event_name == 'pull_request' ]; then should_publish_docker_images=false; else should_publish_docker_images=true; fi
+          if [ $GITHUB_EVENT_PATH == 'pull_request' ]; then should_publish_docker_images=false; else should_publish_docker_images=true; fi
+          if [ $GITHUB_EVENT_PATH == 'pull_request' ]; then branch=$GITHUB_HEAD_REF; else branch=$GITHUB_REF; fi
           echo "should_publish_docker_images=$should_publish_docker_images"
-          branch=${{ github.head_ref }}
           echo "branch=$branch"
           echo "sh .github/workflows/trigger_circle_ci.sh $should_publish_docker_images $branch"
