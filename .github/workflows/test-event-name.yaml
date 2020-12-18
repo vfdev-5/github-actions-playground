@@ -23,4 +23,5 @@ jobs:
           echo "should_publish_docker_images=$should_publish_docker_images"
           echo "branch=$branch"
           echo "CIRCLE_TOKEN=$CIRCLE_TOKEN"
+          if [ -z ${CIRCLE_TOKEN} ]; then echo "Can not find CIRCLE_TOKEN env variable"; fi
           echo "sh .github/workflows/trigger_circle_ci.sh $should_publish_docker_images $branch"
