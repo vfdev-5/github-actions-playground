@@ -17,6 +17,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Trigger Circle-CI pipeline
+        env:
+          CIRCLE_TOKEN: ${{ CIRCLE_TOKEN }} 
         run: |
           if [ $GITHUB_EVENT_NAME == 'pull_request' ]; then should_publish_docker_images=false; else should_publish_docker_images=true; fi
           branch=$GITHUB_REF
