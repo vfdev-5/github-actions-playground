@@ -22,5 +22,6 @@ jobs:
         nvidia-smi
         ls /
         ls /home
+        ps -aux
         docker ps -a
       
