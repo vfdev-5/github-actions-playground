@@ -20,5 +20,7 @@ jobs:
       run: |
         python --version
         nvidia-smi
-        ps -aux
+        ls /
+        ls /home
+        docker ps -a
       
