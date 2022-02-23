@@ -37,6 +37,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: gh-pages
+          fetch-depth: 3
 
       - name: Download docs artifact
         uses: actions/download-artifact@v2
@@ -48,6 +49,8 @@ jobs:
         run: |          
           cp -R /tmp/docs/* main/
           ls -alh main
+          # Manipulations to squash the history:
+          git reset --sorf 3d7287c272bb18d4550031df452099b92ac673bc
 
       - name: Commit and push to gh-pages
         uses: github-actions-x/commit@v2.8
