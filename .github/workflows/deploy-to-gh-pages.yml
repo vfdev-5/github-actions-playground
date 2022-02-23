@@ -58,6 +58,6 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           push-branch: 'gh-pages'
           commit-message: 'New docs'
-          force-add: 'true'
+          force-push: 'true'
           name: gha
           email: gha@email.org
