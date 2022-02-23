@@ -1,0 +1,47 @@
+name: Build and Deploy Docs
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - master
+
+jobs:
+
+  build-docs:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+          architecture: x64
+      - name: Build docs
+        run: |
+          mkdir -p docs/build/html
+          echo "test deployed docs file1" > docs/build/html/test1.html
+          echo "test deployed docs file2" > docs/build/html/test2.html
+          echo "test deployed docs file3" > docs/build/html/test3.html
+      - name: Upload docs as GHA artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: built-docs
+          path: docs/build/html
+
+  deploy-docs:
+    runs-on: ubuntu-18.04
+    if: master
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: gh-pages
+
+      - name: Download docs artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: built-docs
+
+      - name: Deploy docs
+        run: |
+          ls -alh
+          
