@@ -58,6 +58,5 @@ jobs:
           add_timestamp: false
           commit_message: "New docs"
           force: true
-          target_branch: gh-pages
           organization_domain: github.com
 
