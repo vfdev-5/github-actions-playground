@@ -31,7 +31,7 @@ jobs:
 
   deploy-docs:
     needs: [build-docs] 
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     if: (github.ref == 'refs/heads/master' && github.event_name == 'push')
     steps:
       - uses: actions/checkout@v2
@@ -48,13 +48,16 @@ jobs:
         run: |          
           cp -R /tmp/docs/* main/
           ls -alh main
+          # add new files to git
+          git add main
 
       - name: Commit and push to gh-pages
         uses: devops-infra/action-commit-push@master
         with:
           github_token: "${{ secrets.GITHUB_TOKEN }}"
-          add_timestamp: true
-          commit_prefix: "[AUTO]"
+          add_timestamp: false
           commit_message: "New docs"
           force: true
           target_branch: gh-pages
+          organization_domain: github.com
+
