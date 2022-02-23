@@ -48,13 +48,14 @@ jobs:
         run: |          
           cp -R /tmp/docs/* main/
           ls -alh main
-          # add new files to git
-          git add main
 
       - name: Commit and push to gh-pages
-        uses: devops-infra/action-commit-push@master
+        uses: github-actions-x/commit@v2.8
         with:
-          github_token: "${{ secrets.GITHUB_TOKEN }}"
-          add_timestamp: false
-          commit_message: "New docs"
-          force: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          push-branch: 'gh-pages'
+          commit-message: 'New docs'
+          force-add: 'true'
+          files: main
+          name: gha
+          email: gha@email.org
