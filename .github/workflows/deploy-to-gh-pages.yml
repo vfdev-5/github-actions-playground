@@ -48,8 +48,6 @@ jobs:
         run: |          
           cp -R /tmp/docs/* main/
           ls -alh main
-          # Reset history
-          git reset --soft 3d7287c272bb18d4550031df452099b92ac673bc
 
       - name: Commit and push to gh-pages
         uses: github-actions-x/commit@v2.8
