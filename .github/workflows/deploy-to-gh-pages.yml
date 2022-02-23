@@ -22,6 +22,8 @@ jobs:
           echo "test deployed docs file1" > docs/build/html/test1.html
           echo "test deployed docs file2" > docs/build/html/test2.html
           echo "test deployed docs file3" > docs/build/html/test3.html
+          sleep 25
+
       - name: Upload docs as GHA artifact
         uses: actions/upload-artifact@v2
         with:
@@ -40,8 +42,18 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: built-docs
+          path: /tmp/docs
 
       - name: Deploy docs
         run: |
-          ls -alh
+          ls -alh 
+          git status
           
+          cp -R /tmp/docs/* main/
+
+          ls -alh main
+          git status
+
+          git add main
+          git commit --amend -m "New docs"
+          git push origin gh-pages
