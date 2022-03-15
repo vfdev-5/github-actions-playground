@@ -47,18 +47,50 @@ jobs:
           path: /tmp/docs
 
       - name: Copy built docs to main
+        id: copy-docs
         run: |          
           cp -R /tmp/docs/* main/
           ls -alh main
-          # Manipulations to squash the history:
-          git reset --soft 3d7287c272bb18d4550031df452099b92ac673bc
+          echo "::set-output name=commit::$(git log -1 --format='%s')"
+          echo "commit=$commit"
 
       - name: Commit and push to gh-pages
-        uses: github-actions-x/commit@v2.8
+        uses: devops-infra/action-commit-push@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          push-branch: 'gh-pages'
-          commit-message: 'New docs'
-          force-push: 'true'
-          name: gha
-          email: gha@email.org
+          commit_message: "auto-generated"
+          no_edit: ${{ steps.copy-docs.outputs.commit == 'auto-generated' }}
+          amend: ${{ steps.copy-docs.outputs.commit == 'auto-generated' }}
+
+#   deploy-docs:
+#     needs: [build-docs] 
+#     runs-on: ubuntu-latest
+#     if: (github.ref == 'refs/heads/master' && github.event_name == 'push')
+#     steps:
+#       - uses: actions/checkout@v2
+#         with:
+#           ref: gh-pages
+#           fetch-depth: 3
+
+#       - name: Download docs artifact
+#         uses: actions/download-artifact@v2
+#         with:
+#           name: built-docs
+#           path: /tmp/docs
+
+#       - name: Copy built docs to main
+#         run: |          
+#           cp -R /tmp/docs/* main/
+#           ls -alh main
+#           # Manipulations to squash the history:
+#           git reset --soft 3d7287c272bb18d4550031df452099b92ac673bc
+
+#       - name: Commit and push to gh-pages
+#         uses: github-actions-x/commit@v2.8
+#         with:
+#           github-token: ${{ secrets.GITHUB_TOKEN }}
+#           push-branch: 'gh-pages'
+#           commit-message: 'New docs'
+#           force-push: 'true'
+#           name: gha
+#           email: gha@email.org
