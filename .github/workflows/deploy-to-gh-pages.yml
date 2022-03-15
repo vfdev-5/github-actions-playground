@@ -62,13 +62,21 @@ jobs:
         run: |
           echo "${{ steps.copy-docs.outputs.commit }}"
       
-      - name: Commit and push to gh-pages
+      - name: New commit and push to gh-pages
+        if: ${{ steps.copy-docs.outputs.commit != 'auto-generated' }}
         uses: devops-infra/action-commit-push@v0.8
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           commit_message: "auto-generated"
-          no_edit: ${{ steps.copy-docs.outputs.commit == 'auto-generated' }}
-          amend: ${{ steps.copy-docs.outputs.commit == 'auto-generated' }}
+
+      - name: Commit with amend and push to gh-pages
+        if: ${{ steps.copy-docs.outputs.commit == 'auto-generated' }}
+        uses: devops-infra/action-commit-push@v0.8
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          no_edit: true
+          amend: true
+
 
 #   deploy-docs:
 #     needs: [build-docs] 
