@@ -23,7 +23,7 @@ jobs:
           echo "test deployed docs file223" > docs/build/html/test2.html
           echo "test deployed docs file323" > docs/build/html/test3.html
           echo "test deployed docs file423" > docs/build/html/test4.html
-          echo "test deployed docs file444" > docs/build/html/test5.html
+          echo "test deployed docs file445" > docs/build/html/test5.html
 
       - name: Upload docs as GHA artifact
         uses: actions/upload-artifact@v2
