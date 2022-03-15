@@ -52,6 +52,8 @@ jobs:
         run: |          
           cp -R /tmp/docs/* main/
           ls -alh main
+          # Add updated folder
+          git add main
           git status
           git log -1 --format='%s'
           echo "::set-output name=commit::$(git log -1 --format='%s')"
