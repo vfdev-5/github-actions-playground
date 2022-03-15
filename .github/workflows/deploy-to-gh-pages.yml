@@ -107,7 +107,7 @@ jobs:
       - name: Git reset to commit/amend
         if: ${{ steps.copy-docs.outputs.commit_name == 'auto-generated commit' }}
         run: |
-          git reset --soft ${{ steps.copy-docs.outputs.commit_name }}~1
+          git reset --soft ${{ steps.copy-docs.outputs.commit_hash }}~1
           git log -3
 
       - name: Commit and push to gh-pages
