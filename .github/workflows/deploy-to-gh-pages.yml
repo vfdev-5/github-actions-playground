@@ -51,13 +51,17 @@ jobs:
         run: |          
           cp -R /tmp/docs/* main/
           ls -alh main
+          git log -1 --format='%s'
           echo "::set-output name=commit::$(git log -1 --format='%s')"
-          echo "commit=$commit"
 
+      - name: Check Commit
+        run: |
+          echo "${{ steps.copy-docs.outputs.commit }}"
+      
       - name: Commit and push to gh-pages
         uses: devops-infra/action-commit-push@master
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           commit_message: "auto-generated"
           no_edit: ${{ steps.copy-docs.outputs.commit == 'auto-generated' }}
           amend: ${{ steps.copy-docs.outputs.commit == 'auto-generated' }}
