@@ -99,6 +99,9 @@ jobs:
           git log -1 --format='%s'
           echo "::set-output name=commit_name::$(git log -1 --format='%s')"
           echo "::set-output name=commit_hash::$(git log -1 --format='%h')"
+          # Fix for the unsafe repo error:
+          # https://github.blog/2022-04-12-git-security-vulnerability-announced/
+          git config --global --add safe.directory /github/workspace
 
       - name: Git reset to commit/amend
         if: ${{ steps.copy-docs.outputs.commit_name == 'auto-generated commit' }}
