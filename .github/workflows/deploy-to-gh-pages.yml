@@ -99,9 +99,6 @@ jobs:
           git log -1 --format='%s'
           echo "::set-output name=commit_name::$(git log -1 --format='%s')"
           echo "::set-output name=commit_hash::$(git log -1 --format='%h')"
-          # Fix for the unsafe repo error:
-          # https://github.blog/2022-04-12-git-security-vulnerability-announced/
-          git config --global --add safe.directory /github/workspace
 
       - name: Git reset to commit/amend
         if: ${{ steps.copy-docs.outputs.commit_name == 'auto-generated commit' }}
@@ -110,7 +107,7 @@ jobs:
           git log -3
 
       - name: Commit and push to gh-pages
-        uses: github-actions-x/commit@v2.8
+        uses: github-actions-x/commit@v2.9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           push-branch: 'gh-pages'
