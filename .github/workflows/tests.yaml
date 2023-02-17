@@ -1,25 +1,21 @@
-on: [pull_request, push]
+name: Run unit tests
+  push:
+    branches:
+      - master
+      - "*.*.*"
+  pull_request:
+  workflow_dispatch:
 
 jobs:
-  mkl-tests:
+  tests:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.7
-      uses: actions/setup-python@v2
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v4
       with:
-        python-version: '3.7'
-        architecture: 'x64'
-
-    - name: Run test two
+        python-version: '3.8'
+    - name: check python version
       run: |
-        pip install pytest codecov pytest-cov
-        pytest --cov src --cov-report=xml tests/test_two.py
-
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1
-      with:
-        file: ./coverage.xml
-        flags: one
-        fail_ci_if_error: true
+        python --version
