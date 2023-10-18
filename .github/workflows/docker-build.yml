@@ -64,7 +64,7 @@ jobs:
           echo "Done"
 
       - name: Publish docker images
-        if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'release' }}
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'release'
         run: |
           echo "Push docker images ..."
           echo "Done"
