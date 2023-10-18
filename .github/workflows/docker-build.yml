@@ -54,7 +54,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Build docker images
-        working-directory: ${{ github.repository }}/docker
         run: |
 
           export PTH_VERSION=${{ needs.setup.outputs.pth_version }}
@@ -65,7 +64,6 @@ jobs:
 
       - name: Publish docker images
         if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'release' }}
-        working-directory: ${{ github.repository }}/docker
         run: |
           echo "Push docker images ..."
           echo "Done"
