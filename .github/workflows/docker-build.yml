@@ -48,8 +48,7 @@ jobs:
 
   build-hvd:
     name: Build all Horovod flavoured PyTorch-Ignite images
-    needs: setup
-    if: (${{ github.event_name == 'pull_request' }} && (contains(needs.setup.outputs.modified, 'hvd/') || contains(needs.setup.outputs.modified, 'docker.cfg'))) || (${{ github.event_name != 'pull_request' }})
+    if: (${{ github.event_name != 'pull_request' }}) || (${{ github.event_name == 'pull_request' }} && (contains(needs.setup.outputs.modified, 'hvd/') || contains(needs.setup.outputs.modified, 'docker.cfg')))
 
     runs-on: ubuntu-latest
     steps:
