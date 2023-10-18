@@ -2,6 +2,7 @@
 # 1/Building apex and hvd with pytorch:1.6.0-cuda10.1-cudnn7-devel
 FROM pytorch/pytorch:1.6.0-cuda10.1-cudnn7-devel AS apex-hvd-builder
 
+
 ARG ARG_TORCH_CUDA_ARCH_LIST="6.0;6.1;6.2;7.0;7.5"
 ENV TORCH_CUDA_ARCH_LIST=$ARG_TORCH_CUDA_ARCH_LIST
 

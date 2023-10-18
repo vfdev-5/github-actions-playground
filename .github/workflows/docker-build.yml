@@ -50,7 +50,7 @@ jobs:
   build-hvd:
     name: Build all Horovod flavoured PyTorch-Ignite images
     needs: setup
-    if: (${{ github.event_name != 'pull_request' }}) || (contains(needs.setup.outputs.modified, 'hvd/') || contains(needs.setup.outputs.modified, 'docker.cfg'))
+    if: github.event_name != 'pull_request' || (contains(needs.setup.outputs.modified, 'hvd/') || contains(needs.setup.outputs.modified, 'docker.cfg'))
 
     runs-on: ubuntu-latest
     steps:
@@ -64,7 +64,7 @@ jobs:
           echo "Done"
 
       - name: Publish docker images
-        if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'release' }}
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'release'
         run: |
           echo "Push docker images ..."
           echo "Done"
