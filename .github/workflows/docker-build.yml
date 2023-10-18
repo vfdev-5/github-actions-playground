@@ -1,0 +1,70 @@
+name: Build/Publish Docker Images
+
+on:
+  pull_request:
+    paths:
+      - docker/**
+      - ".github/workflows/docker-build.yml"
+  release:
+    types: [published]      
+  workflow_dispatch:
+
+
+concurrency:
+  # <workflow_name>-<branch_name>-<true || commit_sha (if branch is protected)>
+  group: docker-build-publish-${{ github.ref_name }}-${{ !(github.ref_protected) || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+
+  setup:
+    name: Setup
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    outputs:
+      modified: ${{ steps.set-modified.outputs.modified }}
+      pth_version: ${{ steps.set-versions.outputs.pth_version }}
+      hvd_version: ${{ steps.set-versions.outputs.hvd_version }}
+      msdp_version: ${{ steps.set-versions.outputs.msdp_version }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Changed Files Exporter
+        id: files
+        uses: umani/changed-files@v4.1.0
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get a list of modified files
+        run: echo "modified=${{ steps.files.outputs.files_created }} ${{ steps.files.outputs.files_updated }}" >> $GITHUB_ENV
+      - name: Set outputs
+        id: set-modified
+        run: echo "modified=${{ env.modified }}" >> $GITHUB_OUTPUT
+      - name: Set versions
+        id: set-versions
+        working-directory: docker
+        run: |
+          echo "pth_version=$(python -c "import configparser; cfg=configparser.ConfigParser(); cfg.read('docker.cfg'); print(cfg.get('DEFAULT', 'build_docker_image_pytorch_version'))")" >> $GITHUB_OUTPUT
+          echo "hvd_version=$(python -c "import configparser; cfg=configparser.ConfigParser(); cfg.read('docker.cfg'); print(cfg.get('DEFAULT', 'build_docker_image_hvd_version'))")" >> $GITHUB_OUTPUT
+
+
+  build-hvd:
+    name: Build all Horovod flavoured PyTorch-Ignite images
+    needs: setup
+    if: (${{ github.event_name == 'pull_request' }} && (contains(needs.setup.outputs.modified, 'hvd/') || contains(needs.setup.outputs.modified, 'docker.cfg'))) || (${{ github.event_name != 'pull_request' }})
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build docker images
+        run: |
+
+          export PTH_VERSION=${{ needs.setup.outputs.pth_version }}
+          export HVD_VERSION=${{ needs.setup.outputs.hvd_version }}
+
+          echo "Build docker images ..."
+          echo "Done"
+
+      - name: Publish docker images
+        if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'release' }}
+        run: |
+          echo "Push docker images ..."
+          echo "Done"
+
