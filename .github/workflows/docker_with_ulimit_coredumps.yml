@@ -24,16 +24,17 @@ jobs:
       run: |
         apt-get update && apt-get install -y clang-18 --no-install-recommends
         cd segfault_app
-        echo "--- build and execute:"
+        echo "--- build and execute"
         clang++-18 -g main.cpp -o main && ./main
         
-        echo "--- ls /tmp/cores:"
-        ls -alh /tmp/cores/*
+        echo "--- ls /var/lib/systemd/coredump/"
+        ls -alh /var/lib/systemd/coredump/
 
     - name: Copy core dumps
-      run: |
-        ls -alh /var/lib/systemd/coredump/
+      run: |        
         cp /var/lib/systemd/coredump/* /tmp/cores/
+        echo "--- ls /tmp/cores:"
+        ls -alh /tmp/cores
 
     - uses: actions/upload-artifact@v4
       with:
