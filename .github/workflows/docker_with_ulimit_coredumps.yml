@@ -1,0 +1,43 @@
+name: Test docker container with ulimit, core dumps upload
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:24.04
+      options: 
+        - --ulimit core=-1,-1
+        - --init 
+        - --cap-add=SYS_ADMIN
+        - --cap-add=SYS_PTRACE
+        - --security-opt seccomp:unconfined
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set cores to get stored in /tmp/cores
+      run: |
+        mkdir -p /tmp/cores
+        chmod 777 /tmp/cores
+        # Core filenames will be of the form executable.pid.timestamp:
+        bash -c 'echo "/tmp/cores/%e.%p.%t" > /proc/sys/kernel/core_pattern'    
+
+    - name: Run the binary
+      run: |
+        apt-get update && apt-get install -y clang-18 --no-install-recommends
+        cd segfault_app
+        echo "--- build and execute:"
+        clang++-18 -g main.cpp -o main && ./main
+        
+        echo "--- ls /tmp/cores:"
+        ls /tmp/cores
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: cores
+        path: /tmp/cores
