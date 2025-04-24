@@ -9,12 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ubuntu:24.04
-      options: 
-        - --ulimit core=-1,-1
-        - --init 
-        - --cap-add=SYS_ADMIN
-        - --cap-add=SYS_PTRACE
-        - --security-opt seccomp:unconfined
+      options: --ulimit core=-1,-1 --init --cap-add=SYS_ADMIN --cap-add=SYS_PTRACE --security-opt seccomp:unconfined
     defaults:
       run:
         shell: bash -l {0}
