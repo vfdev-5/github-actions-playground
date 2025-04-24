@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ubuntu:24.04
-      options: --ulimit core=-1:-1 --init --cap-add=SYS_ADMIN --cap-add=SYS_PTRACE --security-opt seccomp:unconfined --privileged
+      options: --ulimit core=-1:-1 --init --cap-add=SYS_ADMIN --cap-add=SYS_PTRACE --security-opt seccomp:unconfined
     defaults:
       run:
         shell: bash -l {0}
@@ -19,20 +19,19 @@ jobs:
       run: |
         mkdir -p /tmp/cores
         chmod 777 /tmp/cores
-        # Core filenames will be of the form executable.pid.timestamp:
-        bash -c 'echo "/tmp/cores/%e.%p.%t" > /proc/sys/kernel/core_pattern'    
+        echo /proc/sys/kernel/core_pattern
 
-    - name: Run the binary
-      run: |
-        apt-get update && apt-get install -y clang-18 --no-install-recommends
-        cd segfault_app
-        echo "--- build and execute:"
-        clang++-18 -g main.cpp -o main && ./main
+    # - name: Run the binary
+    #   run: |
+    #     apt-get update && apt-get install -y clang-18 --no-install-recommends
+    #     cd segfault_app
+    #     echo "--- build and execute:"
+    #     clang++-18 -g main.cpp -o main && ./main
         
-        echo "--- ls /tmp/cores:"
-        ls -alh /tmp/cores/*
+    #     echo "--- ls /tmp/cores:"
+    #     ls -alh /tmp/cores/*
 
-    - uses: actions/upload-artifact@v4
-      with:
-        name: cores
-        path: /tmp/cores/
+    # - uses: actions/upload-artifact@v4
+    #   with:
+    #     name: cores
+    #     path: /tmp/cores/
