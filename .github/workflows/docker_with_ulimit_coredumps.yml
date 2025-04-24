@@ -19,7 +19,7 @@ jobs:
       run: |
         mkdir -p /tmp/cores
         chmod 777 /tmp/cores
-        echo /proc/sys/kernel/core_pattern
+        cat /proc/sys/kernel/core_pattern
 
     # - name: Run the binary
     #   run: |
