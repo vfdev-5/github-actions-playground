@@ -19,19 +19,23 @@ jobs:
       run: |
         mkdir -p /tmp/cores
         chmod 777 /tmp/cores
-        cat /proc/sys/kernel/core_pattern
 
-    # - name: Run the binary
-    #   run: |
-    #     apt-get update && apt-get install -y clang-18 --no-install-recommends
-    #     cd segfault_app
-    #     echo "--- build and execute:"
-    #     clang++-18 -g main.cpp -o main && ./main
+    - name: Run the binary
+      run: |
+        apt-get update && apt-get install -y clang-18 --no-install-recommends
+        cd segfault_app
+        echo "--- build and execute:"
+        clang++-18 -g main.cpp -o main && ./main
         
-    #     echo "--- ls /tmp/cores:"
-    #     ls -alh /tmp/cores/*
+        echo "--- ls /tmp/cores:"
+        ls -alh /tmp/cores/*
 
-    # - uses: actions/upload-artifact@v4
-    #   with:
-    #     name: cores
-    #     path: /tmp/cores/
+    - name: Copy core dumps
+      run: |
+        ls -alh /var/lib/systemd/coredump/
+        cp /var/lib/systemd/coredump/* /tmp/cores/
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: cores
+        path: /tmp/cores/
