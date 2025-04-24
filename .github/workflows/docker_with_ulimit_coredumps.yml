@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ubuntu:24.04
-      options: --ulimit core=-1:-1 --init --cap-add=SYS_ADMIN --cap-add=SYS_PTRACE --security-opt seccomp:unconfined
+      options: --ulimit core=-1:-1 --init --cap-add=SYS_ADMIN --cap-add=SYS_PTRACE --security-opt seccomp:unconfined --privileged
     defaults:
       run:
         shell: bash -l {0}
@@ -32,7 +32,7 @@ jobs:
         echo "--- ls /tmp/cores:"
         ls -alh /tmp/cores/*
 
-    # - uses: actions/upload-artifact@v3
+    # - uses: actions/upload-artifact@v4
     #   with:
     #     name: cores
     #     path: /tmp/cores/
